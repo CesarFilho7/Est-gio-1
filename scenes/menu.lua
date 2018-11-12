@@ -9,7 +9,7 @@ function scene:create( event )
 	local menuMusica = audio.loadStream( "menu-musica.wav")
 	audio.play(menuMusica, {channel = 1, loops = -1})
 
-	local background = display.newImageRect( "front/menu-background.png", 360, 670 )
+	local background = display.newImageRect( "front/menu-background.png", 360, 700 )
 	background.x = display.contentCenterX
 	background.y = display.contentCenterY
 	groupMenu:insert( background )

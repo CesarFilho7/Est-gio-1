@@ -26,7 +26,7 @@ function scene:create( event )
 	groupGame:insert(plataforma2)
 
 	-- criação do background
-	local background = display.newImageRect( "front/background.png", 360, 670 )
+	local background = display.newImageRect( "front/background.png", 360, 700 )
 	background.x = display.contentCenterX
 	background.y = display.contentCenterY
 	groupGame:insert(background)
@@ -75,12 +75,12 @@ function scene:create( event )
 	-- Criando o contador de bananas coletadas
 	local bananaPontuacao = display.newImageRect(groupGame, "front/bananas.png", 30, 20)
 	bananaPontuacao.x = display.contentCenterX + 65
-	bananaPontuacao.y = 10
+	bananaPontuacao.y = 2
 
 	-- Criando o número que vai ser a pontuação
-	local contadorAltura = display.newText( "0", display.contentCenterX -48, 10, native.systemFont, 20 )
+	local contadorAltura = display.newText( "0", display.contentCenterX -48, 2, native.systemFont, 20 )
 	contadorAltura:setFillColor( black )
-	local pontos = display.newText( "pontos:", display.contentCenterX -95, 10, native.systemFont, 16 )
+	local pontos = display.newText( "pontos:", display.contentCenterX -95, 2, native.systemFont, 16 )
 	pontos:setFillColor( black )
 
 	local pastTime = 000  -- 10 minutes * 60 seconds
@@ -173,7 +173,7 @@ function scene:create( event )
 			   	table.insert( galhoTable, novoGalho)
 				novoGalho.name = "galho"
 				novoGalho.x = display.contentCenterX + 110
-				novoGalho.y = -100
+				novoGalho.y = -130
 				novoGalho:setLinearVelocity(0, -100)
 				groupGame:insert(novoGalho)
 
@@ -183,7 +183,7 @@ function scene:create( event )
 			   	table.insert( galhoTable, novoGalho)
 				novoGalho.name = "galho"
 				novoGalho.x = display.contentCenterX - 110
-				novoGalho.y = -100
+				novoGalho.y = -130
 				novoGalho:setLinearVelocity(0, -100)
 				groupGame:insert(novoGalho)
 
@@ -211,7 +211,7 @@ function scene:create( event )
 
 
 	-- Cria um galho a cada 1s = 1000
-	geradorDeGalho = timer.performWithDelay(10000, criarGalho, -1)
+	geradorDeGalho = timer.performWithDelay(900, criarGalho, -1)
 	-- Gera a banana aleatoriamente 
 	geradorDeBanana = timer.performWithDelay( 1200, gerarBanana, -1)
 	-- Clicando no background o player pula
@@ -222,7 +222,7 @@ function scene:create( event )
 end
 
 contadorBanana = 0
-contadorBananaText = display.newText(contadorBanana, display.contentCenterX + 105, 10, native.systemFont, 20)
+contadorBananaText = display.newText(contadorBanana, display.contentCenterX + 105, 2, native.systemFont, 20)
 contadorBananaText:setFillColor( black )
 
 function onCollision ( event )
