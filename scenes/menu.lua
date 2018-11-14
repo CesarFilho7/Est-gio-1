@@ -4,6 +4,11 @@ local scene = composer.newScene()
 local groupMenu = display.newGroup()
 local contador = 0 
 
+	function gotoGame() 
+		audio.pause( {channel = 1} )
+		composer.gotoScene( "scenes.game" )
+	end
+
 function scene:create( event )
 
 	local menuMusica = audio.loadStream( "menu-musica.wav")
@@ -24,24 +29,7 @@ function scene:create( event )
 	start.y = display.contentCenterY + 60
 	groupMenu:insert( start )
 
-	local botaoHighscores = display.newImageRect( "front/botao-highscores.png", 100, 55 )
-	botaoHighscores.x = display.contentCenterX
-	botaoHighscores.y = display.contentCenterY + 200
-	groupMenu:insert( botaoHighscores )
-
-	function gotoGame() 
-		audio.pause( {channel = 1} )
-		composer.gotoScene( "scenes.game" )
-	end
-
 	start:addEventListener( "tap", gotoGame )
-
-	function gotoGameOver()
-		audio.pause( {channel = 1} )
-		composer.gotoScene("scenes.gameover")
-	end
-
-	botaoHighscores:addEventListener( "tap", gotoGameOver )
 
 
 	function buttonAnimation()

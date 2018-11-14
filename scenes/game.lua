@@ -2,7 +2,12 @@ local composer = require( "composer" )
 local groupGame = display.newGroup()
 local scene = composer.newScene()
 
+local background
+
 function scene:create( event )
+	local sceneGroup = self.view
+	sceneGroup:insert(groupGame)
+
 	local galhoTable = {}
 	local bananaTable = {}
 	local collisionFilter1 = { groupIndex = -1 }
@@ -26,7 +31,7 @@ function scene:create( event )
 	groupGame:insert(plataforma2)
 
 	-- criação do background
-	local background = display.newImageRect( "front/background.png", 360, 700 )
+	background = display.newImageRect( "front/background.png", 360, 700 )
 	background.x = display.contentCenterX
 	background.y = display.contentCenterY
 	groupGame:insert(background)
@@ -77,11 +82,18 @@ function scene:create( event )
 	bananaPontuacao.x = display.contentCenterX + 65
 	bananaPontuacao.y = 2
 
+	local contadorBanana = 0
+	contadorBananaText = display.newText(contadorBanana, display.contentCenterX + 105, 2, native.systemFont, 20)
+	contadorBananaText:setFillColor(black)
+
 	-- Criando o número que vai ser a pontuação
 	local contadorAltura = display.newText( "0", display.contentCenterX -48, 2, native.systemFont, 20 )
 	contadorAltura:setFillColor( black )
 	local pontos = display.newText( "pontos:", display.contentCenterX -95, 2, native.systemFont, 16 )
 	pontos:setFillColor( black )
+	groupGame:insert(contadorAltura)
+	groupGame:insert(pontos)
+	groupGame:insert(contadorBananaText)
 
 	local pastTime = 000  -- 10 minutes * 60 seconds
 
@@ -95,21 +107,21 @@ function scene:create( event )
 
 	-- Configurando altura, largura do sprite e o número de frames
 	local sheetOptions  = {width = 100, height = 100, numFrames = 10}
-	local sheet = graphics.newImageSheet( "front/spritecesar4.png", sheetOptions )
+	local sheet = graphics.newImageSheet( "front/spritecesinha4.png", sheetOptions )
 
 	-- Definindo a animação 
 	local sequences = {
 		{
 			name = "RunRight",
 			frames = {1,2,3,4,5},
-			time = 450,
+			time = 300,
 			loopCount = 0,
 		},
 
 		{
 			name = "RunLeft",
 			frames = {6,7,8,9,10},
-			time = 450,
+			time = 300,
 			loopCount = 0,
 		}
 	}
@@ -137,7 +149,6 @@ function scene:create( event )
 	    	local vx, vy = player:getLinearVelocity()
 	        player:setLinearVelocity( 0, vy )
 	        
-
 	        if (direita == true) then
 	        	--altura e direção do pulo
 	        	local jump = audio.loadStream( "jump.mp3")
@@ -157,56 +168,52 @@ function scene:create( event )
 	        	player:applyLinearImpulse( 18, -2.3, player.x, player.y )
 	       		player:play()
 	       		player:rotate(180)
-	       		end
+	       	end
 	    	end
 		end
 		return true
 	end
 
-	function criarGalho(event)
-		
+	function criarGalho(event)		
 	   	local whereFrom = math.random(2)
+	    if ( whereFrom == 1 ) then
+	    	local novoGalho = display.newImageRect("front/galho1.png", 110, 70)
+	    	physics.addBody( novoGalho, "dynamic", {radius = 18, density = -5, friction=0, bounce=0, filter = collisionFilter1})
+		   	table.insert( galhoTable, novoGalho)
+			novoGalho.name = "galho"
+			novoGalho.x = display.contentCenterX + 110
+			novoGalho.y = -130
+			novoGalho:setLinearVelocity(0, -100)
+			groupGame:insert(novoGalho)
+		else
+		 	local novoGalho = display.newImageRect("front/galho2.png", 90, 70)
+		 	physics.addBody( novoGalho, "dynamic", {radius = 18, density = -5, friction=0, bounce=0, filter = collisionFilter1})
+		   	table.insert( galhoTable, novoGalho)
+			novoGalho.name = "galho"
+			novoGalho.x = display.contentCenterX - 110
+			novoGalho.y = -130
+			novoGalho:setLinearVelocity(0, -100)
+			groupGame:insert(novoGalho)
 
-		    if ( whereFrom == 1 ) then
-		    	local novoGalho = display.newImageRect("front/galho1.png", 110, 70)
-		    	physics.addBody( novoGalho, "dynamic", {radius = 18, density = -5, friction=0, bounce=0, filter = collisionFilter1})
-			   	table.insert( galhoTable, novoGalho)
-				novoGalho.name = "galho"
-				novoGalho.x = display.contentCenterX + 110
-				novoGalho.y = -130
-				novoGalho:setLinearVelocity(0, -100)
-				groupGame:insert(novoGalho)
-
-			else
-			 	local novoGalho = display.newImageRect("front/galho2.png", 90, 70)
-			 	physics.addBody( novoGalho, "dynamic", {radius = 18, density = -5, friction=0, bounce=0, filter = collisionFilter1})
-			   	table.insert( galhoTable, novoGalho)
-				novoGalho.name = "galho"
-				novoGalho.x = display.contentCenterX - 110
-				novoGalho.y = -130
-				novoGalho:setLinearVelocity(0, -100)
-				groupGame:insert(novoGalho)
-
-			end
+		end
 	end
 
 	function gerarBanana(event)
-		
 	   	local whereFrom = math.random(2)
-	   			local banana = display.newImageRect("front/banana.png", 30, 20)
-		    	physics.addBody( banana, "dynamic", {isSensor = true, friction=0, bounce=0, filter = collisionFilter1})
-			   	table.insert( bananaTable, banana)
-				banana.name = "banana"
-				banana.y = -100
-				groupGame:insert(banana)
+		local banana = display.newImageRect("front/banana.png", 30, 20)
+    	physics.addBody( banana, "dynamic", {isSensor = true, friction=0, bounce=0, filter = collisionFilter1})
+	   	table.insert( bananaTable, banana)
+		banana.name = "banana"
+		banana.y = -100
+		groupGame:insert(banana)
 
-		    if ( whereFrom == 1 ) then
-				banana.x = display.contentCenterX + 41
-				banana:setLinearVelocity(0, 200)
-			else
-				banana.x = display.contentCenterX - 41
-				banana:setLinearVelocity(0, 50)
-			end
+	    if ( whereFrom == 1 ) then
+			banana.x = display.contentCenterX + 41
+			banana:setLinearVelocity(0, 200)
+		else
+			banana.x = display.contentCenterX - 41
+			banana:setLinearVelocity(0, 50)
+		end
 	end
 
 
@@ -218,37 +225,27 @@ function scene:create( event )
 	background:addEventListener( "touch", touchAction )
 	-- Loop infinito da árvore descendo
 	moveLoop = timer.performWithDelay(1, move, -1)
-   
-end
 
-contadorBanana = 0
-contadorBananaText = display.newText(contadorBanana, display.contentCenterX + 105, 2, native.systemFont, 20)
-contadorBananaText:setFillColor( black )
+	function onCollision ( event )
+		if (event.phase == "began") then
+			local obj1 = event.object1
+			local obj2 = event.object2
 
-function onCollision ( event )
-	if (event.phase == "began") then
-		local obj1 = event.object1
-		local obj2 = event.object2
-
-		if((obj1.name == "player" and obj2.name == "galho" or obj1.name == "galho" and obj2.name == "player")) then
-			composer.gotoScene( "scenes.gameover" )	
-		else if (obj1.name == "player" and obj2.name == "banana") then
-			local coletandoBanana = audio.loadStream( "coletandoBanana.mp3")
-			audio.play(coletandoBanana, {channel = 5})
-			audio.setVolume( 1.0 , {channel = 5} )
-			display.remove( obj2 )
-			contadorBanana = contadorBanana + 10
-			contadorBananaText.text = contadorBanana 			
+			if((obj1.name == "player" and obj2.name == "galho" or obj1.name == "galho" and obj2.name == "player")) then
+				composer.gotoScene("scenes.gameover")	
+			else if (obj1.name == "player" and obj2.name == "banana") then
+				local coletandoBanana = audio.loadStream( "coletandoBanana.mp3")
+				audio.play(coletandoBanana, {channel = 5})
+				audio.setVolume( 1.0 , {channel = 5} )
+				display.remove( obj2 )
+				contadorBanana = contadorBanana + 10
+				contadorBananaText.text = contadorBanana 			
+			end
 			end
 		end
 	end
-end
 
-Runtime:addEventListener( "collision", onCollision )
-
-function endGame()
-	composer.setVariable( "finalScore", score )
-    composer.gotoScene( "highscores", { time=800, effect="crossFade" } )
+	Runtime:addEventListener( "collision", onCollision )
 end
 
 function scene:hide( event )
@@ -256,13 +253,15 @@ function scene:hide( event )
 	local phase = event.phase
  
 	if ( phase == "will" ) then
-		audio.stop(2)
-		timer.cancel( moveLoop )
-		timer.cancel( geradorDeGalho )
-		timer.cancel( geradorDeBanana )
-		display.remove( groupGame )
-	elseif ( phase == "did" ) then
+		timer.cancel(moveLoop)
+		timer.cancel(geradorDeGalho)
+		timer.cancel(geradorDeBanana)
 		
+	elseif ( phase == "did" ) then
+		Runtime:removeEventListener( "collision", onCollision )
+		background:addEventListener( "touch", touchAction )
+		audio.stop(2)
+		display.remove(groupGame)
 	end
 end
 
@@ -272,7 +271,6 @@ function scene:show( event )
 	local phase = event.phase
  
 	if ( phase == "will" ) then
-		print('removendo cenas')
 		composer.removeScene("menu")
 		composer.removeScene("scenes.gameover")
 		-- Code here runs when the scene is still off screen (but is about to come on screen)

@@ -1,47 +1,41 @@
 local composer = require( "composer" )
  
 local scene = composer.newScene()
-local groupGameOver = display.newGroup()
  
-local contador = 0 
+function gotoGame() 
+	audio.pause( {channel = 1} )
+	composer.gotoScene( "scenes.game" )
+end
+
+function gotoMenu() 
+	composer.gotoScene( "scenes.menu" )	
+end
 
 function scene:create( event )
-	print( 'CRIANDO GAMEOVER' )
+	local sceneGroup = self.view
 
-	local logo = display.newImageRect( "front/logo-menu.png", 320, 250 )
-	logo.x = display.contentCenterX + 10
-	logo.y = display.contentCenterY - 60
-	groupGameOver:insert( logo )
+	local backgroundMenu = display.newImageRect( "front/menu-background.png", 360, 700 )
+	backgroundMenu.x = display.contentCenterX
+	backgroundMenu.y = display.contentCenterY
+	sceneGroup:insert(backgroundMenu)
 
-	local start = display.newImageRect( "front/start-button.png", 200, 250 )
-	start.x = display.contentCenterX
-	start.y = display.contentCenterY + 120
-	groupGameOver:insert( start )
+	local logoGameOver = display.newImageRect( "front/text-gameover.png", 200, 80 )
+	logoGameOver.x = display.contentCenterX + 10
+	logoGameOver.y = display.contentCenterY - 175
+	sceneGroup:insert(logoGameOver)
 
-	function gotoGame() 
-		audio.pause( {channel = 1} )
-		composer.gotoScene( "scenes.game" )
-		
-	end
-	start:addEventListener( "tap", gotoGame )
+	local jogarNovamente = display.newImageRect( "front/jogarnovamente2-button.png", 50, 50 )
+	jogarNovamente.x = display.contentCenterX - 65
+	jogarNovamente.y = display.contentCenterY + 145
+	sceneGroup:insert(jogarNovamente)
 
-	function buttonAnimation()
-		if(contador >= 0 and contador < 5) then
-			start.xScale = 1.1
-			start.yScale = 1.1
-			contador = contador + 1
-		else if(contador >= 5) then
-			start.xScale = 1
-			start.yScale = 1
-			contador = contador + 1
-			if(contador >= 10) then
-				contador = 0
-			end
-		end
-		end
-	end
-	buttonAnimationLoop = timer.performWithDelay( "100", buttonAnimation, -1 )
-	print( 'final criando' )
+	local inicio = display.newImageRect( "front/inicio-button.png", 50, 50 )
+	inicio.x = display.contentCenterX + 65
+	inicio.y = display.contentCenterY + 145
+	sceneGroup:insert(inicio)
+	
+	jogarNovamente:addEventListener( "tap", gotoGame )
+	inicio:addEventListener( "tap", gotoMenu )
 end
 
 function scene:hide( event )
@@ -49,12 +43,10 @@ function scene:hide( event )
 	local phase = event.phase
  
 	if ( phase == "will" ) then
-		audio.stop(1)
-		display.remove(groupGameOver)
-		timer.cancel(buttonAnimationLoop)
 
 	elseif ( phase == "did" ) then
-		
+		audio.stop(1)
+		composer.removeScene( "scenes.gameover" )
 	end
 end
 
