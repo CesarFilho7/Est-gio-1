@@ -6,7 +6,7 @@ local contador = 0
 
 	function gotoGame() 
 		audio.pause( {channel = 1} )
-		composer.gotoScene( "scenes.game" )
+		composer.gotoScene( "scenes.game", { time=200, effect="flip" } )
 	end
 
 function scene:create( event )

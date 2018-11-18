@@ -3,6 +3,9 @@ local groupGame = display.newGroup()
 local scene = composer.newScene()
 
 local background
+local contadorBanana = 0
+local contadorBananaText
+
 
 function scene:create( event )
 	local sceneGroup = self.view
@@ -79,31 +82,30 @@ function scene:create( event )
 	end
 	-- Criando o contador de bananas coletadas
 	local bananaPontuacao = display.newImageRect(groupGame, "front/bananas.png", 30, 20)
-	bananaPontuacao.x = display.contentCenterX + 65
+	bananaPontuacao.x = display.contentCenterX - 12
 	bananaPontuacao.y = 2
 
-	local contadorBanana = 0
-	contadorBananaText = display.newText(contadorBanana, display.contentCenterX + 105, 2, native.systemFont, 20)
+	contadorBananaText = display.newText(contadorBanana, display.contentCenterX + 28, 2, native.systemFont, 20)
 	contadorBananaText:setFillColor(black)
 
 	-- Criando o número que vai ser a pontuação
-	local contadorAltura = display.newText( "0", display.contentCenterX -48, 2, native.systemFont, 20 )
-	contadorAltura:setFillColor( black )
-	local pontos = display.newText( "pontos:", display.contentCenterX -95, 2, native.systemFont, 16 )
-	pontos:setFillColor( black )
-	groupGame:insert(contadorAltura)
-	groupGame:insert(pontos)
+	--local contadorAltura = display.newText( "0", display.contentCenterX -48, 2, native.systemFont, 20 )
+	--contadorAltura:setFillColor( black )
+	--local pontos = display.newText( "pontos:", display.contentCenterX -95, 2, native.systemFont, 16 )
+	--pontos:setFillColor( black )
+	--groupGame:insert(contadorAltura)
+	--groupGame:insert(pontos)
 	groupGame:insert(contadorBananaText)
 
-	local pastTime = 000  -- 10 minutes * 60 seconds
+		--local pastTime = 000  -- 10 minutes * 60 seconds
 
-	-- Função que conta o tempo (Pontuação)
-	function updateTime( event ) 
-	    pastTime = pastTime + 1
-	    contadorAltura.text = pastTime
-	end
+		-- Função que conta o tempo (Pontuação)
+		function updateTime( event ) 
+		    --pastTime = pastTime + 1
+		    --contadorAltura.text = pastTime
+		end
 
-	local contadorDeTempo = timer.performWithDelay( 100, updateTime, pastTime )
+		--local contadorDeTempo = timer.performWithDelay( 100, updateTime, pastTime )
 
 	-- Configurando altura, largura do sprite e o número de frames
 	local sheetOptions  = {width = 100, height = 100, numFrames = 10}
@@ -130,7 +132,7 @@ function scene:create( event )
 
 	-- definindo a posição do meu personagem
 	player.x = 281
-	player.y = 363
+	player.y = 361
 	player.width =20
 	player.height =30
 	player.xScale = 1.1
@@ -198,6 +200,11 @@ function scene:create( event )
 		end
 	end
 
+	function endGame()
+		composer.setVariable( "finalScore", contadorBanana )
+   	 	composer.gotoScene( "scenes.gameover", { time=600, effect="crossFade" } )
+	end
+
 	function gerarBanana(event)
 	   	local whereFrom = math.random(2)
 		local banana = display.newImageRect("front/banana.png", 30, 20)
@@ -215,6 +222,7 @@ function scene:create( event )
 			banana:setLinearVelocity(0, 50)
 		end
 	end
+
 
 
 	-- Cria um galho a cada 1s = 1000
@@ -256,11 +264,10 @@ function scene:hide( event )
 		timer.cancel(moveLoop)
 		timer.cancel(geradorDeGalho)
 		timer.cancel(geradorDeBanana)
-		
+		audio.stop(2)
 	elseif ( phase == "did" ) then
 		Runtime:removeEventListener( "collision", onCollision )
 		background:addEventListener( "touch", touchAction )
-		audio.stop(2)
 		display.remove(groupGame)
 	end
 end
