@@ -16,11 +16,10 @@ function loadScores()
         io.close( file )
         scoresTable = json.decode( contents )
         print( "entrei no load2" )
-
     end
  
     if ( scoresTable == nil or #scoresTable == 0 ) then
-        scoresTable = { 0, 100, 0 }
+        scoresTable = { 0, 0, 0 }
         print( "entrei no load3" )
 
     end
@@ -28,7 +27,7 @@ end
 
 function saveScores()
  
-    for i = #scoresTable, 4, -1 do
+    for i = #scoresTable, 3, -1 do
         table.remove( scoresTable, i )
     end
  
@@ -69,16 +68,18 @@ function scene:create( event )
 	sceneGroup:insert(backgroundMenu)
 
 	local highScoresHeader = display.newText(sceneGroup, "High Scores", display.contentCenterX, 130, native.systemFont, 20)
+	highScoresHeader:setFillColor( black )
 
 	for i = 1, 3 do
         if ( scoresTable[i] ) then
             local yPos = 150 + ( i * 56 )
 
             local rankNum = display.newText( sceneGroup, i .. ")", display.contentCenterX-50, yPos, native.systemFont, 20 )
-            rankNum:setFillColor( 0.8 )
+            rankNum:setFillColor( black )
             rankNum.anchorX = 1
  
             local thisScore = display.newText( sceneGroup, scoresTable[i], display.contentCenterX-30, yPos, native.systemFont, 20 )
+            thisScore:setFillColor(black)
             thisScore.anchorX = 0
         end
     end

@@ -89,23 +89,23 @@ function scene:create( event )
 	contadorBananaText:setFillColor(black)
 
 	-- Criando o número que vai ser a pontuação
-	--local contadorAltura = display.newText( "0", display.contentCenterX -48, 2, native.systemFont, 20 )
+	local contadorAltura = display.newText( "0", display.contentCenterX -48, 2, native.systemFont, 20 )
 	--contadorAltura:setFillColor( black )
-	--local pontos = display.newText( "pontos:", display.contentCenterX -95, 2, native.systemFont, 16 )
+	local pontos = display.newText( "pontos:", display.contentCenterX -95, 2, native.systemFont, 16 )
 	--pontos:setFillColor( black )
-	--groupGame:insert(contadorAltura)
-	--groupGame:insert(pontos)
+	groupGame:insert(contadorAltura)
+	groupGame:insert(pontos)
 	groupGame:insert(contadorBananaText)
 
-		--local pastTime = 000  -- 10 minutes * 60 seconds
+		local pastTime = 000  -- 10 minutes * 60 seconds
 
 		-- Função que conta o tempo (Pontuação)
 		function updateTime( event ) 
-		    --pastTime = pastTime + 1
-		    --contadorAltura.text = pastTime
+		    pastTime = pastTime + 1
+		    contadorAltura.text = pastTime
 		end
 
-		--local contadorDeTempo = timer.performWithDelay( 100, updateTime, pastTime )
+		local contadorDeTempo = timer.performWithDelay( 100, updateTime, pastTime )
 
 	-- Configurando altura, largura do sprite e o número de frames
 	local sheetOptions  = {width = 100, height = 100, numFrames = 10}
@@ -155,7 +155,7 @@ function scene:create( event )
 	        	--altura e direção do pulo
 	        	local jump = audio.loadStream( "jump.mp3")
 				audio.play(jump, {channel = 3})
-				audio.setVolume( 0.05 , {channel = 3} )
+				audio.setVolume( 0.01 , {channel = 3} )
 	        	player:applyLinearImpulse( -18, -2.3, player.x, player.y )
 	        	direita = false
 	       		player:setSequence( "RunLeft" )
@@ -164,7 +164,7 @@ function scene:create( event )
 	       	else if (direita == false) then
 	        	local jump = audio.loadStream( "jump.mp3")
 				audio.play(jump, {channel = 4})
-				audio.setVolume( 0.05 , {channel = 4} )
+				audio.setVolume( 0.01 , {channel = 4} )
 	       		direita = true
 	       		player:setSequence( "RunRight" )
 	        	player:applyLinearImpulse( 18, -2.3, player.x, player.y )
@@ -196,13 +196,7 @@ function scene:create( event )
 			novoGalho.y = -130
 			novoGalho:setLinearVelocity(0, -100)
 			groupGame:insert(novoGalho)
-
 		end
-	end
-
-	function endGame()
-		composer.setVariable( "finalScore", contadorBanana )
-   	 	composer.gotoScene( "scenes.gameover", { time=600, effect="crossFade" } )
 	end
 
 	function gerarBanana(event)
@@ -226,9 +220,9 @@ function scene:create( event )
 
 
 	-- Cria um galho a cada 1s = 1000
-	geradorDeGalho = timer.performWithDelay(900, criarGalho, -1)
+	geradorDeGalho = timer.performWithDelay(1300, criarGalho, -1)
 	-- Gera a banana aleatoriamente 
-	geradorDeBanana = timer.performWithDelay( 1200, gerarBanana, -1)
+	geradorDeBanana = timer.performWithDelay( 600, gerarBanana, -1)
 	-- Clicando no background o player pula
 	background:addEventListener( "touch", touchAction )
 	-- Loop infinito da árvore descendo
@@ -240,7 +234,9 @@ function scene:create( event )
 			local obj2 = event.object2
 
 			if((obj1.name == "player" and obj2.name == "galho" or obj1.name == "galho" and obj2.name == "player")) then
-				composer.gotoScene("scenes.gameover")	
+				contadorBanana = 0
+				composer.setVariable( "finalScore", contadorBanana )
+				composer.gotoScene("scenes.gameover")
 			else if (obj1.name == "player" and obj2.name == "banana") then
 				local coletandoBanana = audio.loadStream( "coletandoBanana.mp3")
 				audio.play(coletandoBanana, {channel = 5})
