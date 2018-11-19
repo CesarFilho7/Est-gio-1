@@ -27,7 +27,7 @@ end
 
 function saveScores()
  
-    for i = #scoresTable, 3, -1 do
+    for i = #scoresTable, 2, -1 do
         table.remove( scoresTable, i )
     end
  
@@ -50,10 +50,17 @@ end
 function scene:create( event )
 	local sceneGroup = self.view
 
+	local backgroundMenu = display.newImageRect( "front/menu-background.png", 360, 700 )
+	backgroundMenu.x = display.contentCenterX
+	backgroundMenu.y = display.contentCenterY
+	sceneGroup:insert(backgroundMenu)
+
 	loadScores()
+	local lastScore = composer.getVariable( "finalScore" )
 
 	table.insert( scoresTable, composer.getVariable( "finalScore" ) )
     composer.setVariable( "finalScore", 0 )
+	print( lastScore )
 
     function compare( a, b )
         return a > b
@@ -62,24 +69,21 @@ function scene:create( event )
 
     saveScores()
 
-	local backgroundMenu = display.newImageRect( "front/menu-background.png", 360, 700 )
-	backgroundMenu.x = display.contentCenterX
-	backgroundMenu.y = display.contentCenterY
-	sceneGroup:insert(backgroundMenu)
-
-	local highScoresHeader = display.newText(sceneGroup, "High Scores", display.contentCenterX, 130, native.systemFont, 20)
+	local highScoresHeader = display.newText(sceneGroup, "High Score", display.contentCenterX, 165, native.systemFont, 22)
 	highScoresHeader:setFillColor( black )
+
+	local scoreHeader = display.newText(sceneGroup, "Your Score", display.contentCenterX, 262, native.systemFont, 22)
+	scoreHeader:setFillColor( black )
+
+	local score = display.newText( sceneGroup, lastScore, display.contentCenterX -22, 300, native.systemFont, 30 )
+    score:setFillColor(black )
+    score.anchorX = 0
 
 	for i = 1, 3 do
         if ( scoresTable[i] ) then
-            local yPos = 150 + ( i * 56 )
-
-            local rankNum = display.newText( sceneGroup, i .. ")", display.contentCenterX-50, yPos, native.systemFont, 20 )
-            rankNum:setFillColor( black )
-            rankNum.anchorX = 1
- 
-            local thisScore = display.newText( sceneGroup, scoresTable[i], display.contentCenterX-30, yPos, native.systemFont, 20 )
-            thisScore:setFillColor(black)
+            local yPos = 150 + ( i * 56 ) 
+            local thisScore = display.newText( sceneGroup, scoresTable[i], display.contentCenterX - 30, yPos, native.systemFont, 30 )
+            thisScore:setFillColor(black )
             thisScore.anchorX = 0
         end
     end

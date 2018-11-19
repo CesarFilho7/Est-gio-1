@@ -89,23 +89,12 @@ function scene:create( event )
 	contadorBananaText:setFillColor(black)
 
 	-- Criando o número que vai ser a pontuação
-	local contadorAltura = display.newText( "0", display.contentCenterX -48, 2, native.systemFont, 20 )
+	--local contadorAltura = display.newText( "0", display.contentCenterX -48, 2, native.systemFont, 20 )
 	--contadorAltura:setFillColor( black )
-	local pontos = display.newText( "pontos:", display.contentCenterX -95, 2, native.systemFont, 16 )
+	--local pontos = display.newText( "pontos:", display.contentCenterX -95, 2, native.systemFont, 16 )
 	--pontos:setFillColor( black )
-	groupGame:insert(contadorAltura)
-	groupGame:insert(pontos)
 	groupGame:insert(contadorBananaText)
 
-		local pastTime = 000  -- 10 minutes * 60 seconds
-
-		-- Função que conta o tempo (Pontuação)
-		function updateTime( event ) 
-		    pastTime = pastTime + 1
-		    contadorAltura.text = pastTime
-		end
-
-		local contadorDeTempo = timer.performWithDelay( 100, updateTime, pastTime )
 
 	-- Configurando altura, largura do sprite e o número de frames
 	local sheetOptions  = {width = 100, height = 100, numFrames = 10}
@@ -220,9 +209,9 @@ function scene:create( event )
 
 
 	-- Cria um galho a cada 1s = 1000
-	geradorDeGalho = timer.performWithDelay(1300, criarGalho, -1)
+	geradorDeGalho = timer.performWithDelay(700, criarGalho, -1)
 	-- Gera a banana aleatoriamente 
-	geradorDeBanana = timer.performWithDelay( 600, gerarBanana, -1)
+	geradorDeBanana = timer.performWithDelay( 1000, gerarBanana, -1)
 	-- Clicando no background o player pula
 	background:addEventListener( "touch", touchAction )
 	-- Loop infinito da árvore descendo
@@ -234,8 +223,8 @@ function scene:create( event )
 			local obj2 = event.object2
 
 			if((obj1.name == "player" and obj2.name == "galho" or obj1.name == "galho" and obj2.name == "player")) then
-				contadorBanana = 0
 				composer.setVariable( "finalScore", contadorBanana )
+				contadorBanana = 0
 				composer.gotoScene("scenes.gameover")
 			else if (obj1.name == "player" and obj2.name == "banana") then
 				local coletandoBanana = audio.loadStream( "coletandoBanana.mp3")
