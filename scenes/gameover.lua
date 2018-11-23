@@ -75,14 +75,14 @@ function scene:create( event )
 	local scoreHeader = display.newText(sceneGroup, "Your Score", display.contentCenterX, 262, native.systemFont, 22)
 	scoreHeader:setFillColor( black )
 
-	local score = display.newText( sceneGroup, lastScore, display.contentCenterX -22, 300, native.systemFont, 30 )
+	local score = display.newText( sceneGroup, lastScore, display.contentCenterX -23, 300, native.systemFont, 30 )
     score:setFillColor(black )
     score.anchorX = 0
 
 	for i = 1, 3 do
         if ( scoresTable[i] ) then
             local yPos = 150 + ( i * 56 ) 
-            local thisScore = display.newText( sceneGroup, scoresTable[i], display.contentCenterX - 30, yPos, native.systemFont, 30 )
+            local thisScore = display.newText( sceneGroup, scoresTable[i], display.contentCenterX - 25, yPos, native.systemFont, 30 )
             thisScore:setFillColor(black )
             thisScore.anchorX = 0
         end

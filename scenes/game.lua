@@ -174,7 +174,7 @@ function scene:create( event )
 			novoGalho.name = "galho"
 			novoGalho.x = display.contentCenterX + 110
 			novoGalho.y = -130
-			novoGalho:setLinearVelocity(0, -100)
+			novoGalho:setLinearVelocity(0, -130)
 			groupGame:insert(novoGalho)
 		else
 		 	local novoGalho = display.newImageRect("front/galho2.png", 90, 70)
